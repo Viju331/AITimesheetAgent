@@ -1,0 +1,31 @@
+<div class="profile-step">
+  <h2>Tell us about yourself</h2>
+  <p class="subtitle">This name is used to personalize your generated timesheets.</p>
+
+  <form [formGroup]="form" class="profile-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Full name</mat-label>
+      <input matInput formControlName="name" placeholder="Jane Doe" required />
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email (optional)</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="jane@example.com" />
+    </mat-form-field>
+  </form>
+
+  <div class="actions">
+    <button mat-stroked-button (click)="back.emit()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+    <span class="spacer"></span>
+    <button mat-button (click)="skip()">Skip</button>
+    <button mat-flat-button color="primary" [disabled]="saving()" (click)="save()">
+      @if (saving()) { Saving... } @else { Next }
+    </button>
+  </div>
+</div>

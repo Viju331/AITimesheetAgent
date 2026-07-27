@@ -1,0 +1,26 @@
+<div class="onboarding-page">
+  <div class="onboarding-progress">
+    <span class="step-label">Step {{ wizard.stepNumber() }} of {{ wizard.stepCount }} — {{ wizard.stepLabel() }}</span>
+    <mat-progress-bar mode="determinate" [value]="wizard.progress()" />
+  </div>
+
+  <div class="onboarding-content">
+    @switch (wizard.stepIndex()) {
+      @case (0) {
+        <app-step-welcome (next)="wizard.next()" />
+      }
+      @case (1) {
+        <app-step-profile (back)="wizard.back()" (next)="wizard.next()" />
+      }
+      @case (2) {
+        <app-step-ai-tools (back)="wizard.back()" (next)="wizard.next()" />
+      }
+      @case (3) {
+        <app-step-projects (back)="wizard.back()" (next)="wizard.next()" />
+      }
+      @case (4) {
+        <app-step-complete (back)="wizard.back()" (finished)="onFinished()" />
+      }
+    }
+  </div>
+</div>

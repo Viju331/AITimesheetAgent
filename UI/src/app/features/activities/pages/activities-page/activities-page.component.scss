@@ -1,0 +1,204 @@
+.activities-page {
+  padding: 24px;
+}
+
+.interval-field {
+  width: 180px;
+  margin-right: 8px;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 40px;
+  }
+}
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel-wide {
+  grid-column: 1 / -1;
+}
+
+.repo-list,
+.commit-list,
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.repo-item,
+.commit-item,
+.activity-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.repo-path {
+  font-weight: 500;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repo-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.branch-chip {
+  background: var(--mat-sys-secondary-container, #e8def8);
+  border-radius: 12px;
+  padding: 1px 10px;
+}
+
+.commit-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.commit-hash {
+  flex-shrink: 0;
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.8rem;
+}
+
+.commit-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.commit-message {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.commit-meta {
+  font-size: 0.78rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.activity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.activity-title {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.activity-meta {
+  font-size: 0.78rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.activity-badges {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.badge-ai {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-git {
+  background: #ede7f6;
+  color: #5e35b1;
+}
+
+.badge-confidence {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+:host-context(.dark-theme) {
+  .stat-label,
+  .repo-meta,
+  .commit-meta,
+  .activity-meta {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .repo-item,
+  .commit-item,
+  .activity-item {
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .commit-hash {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media (max-width: 900px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+}

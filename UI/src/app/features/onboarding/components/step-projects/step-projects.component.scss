@@ -1,0 +1,98 @@
+.projects-step {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h2 {
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+
+.subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.root-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  button {
+    margin-top: 8px;
+    white-space: nowrap;
+  }
+}
+
+.root-field {
+  flex: 1 1 auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.search-field {
+  flex: 1 1 auto;
+  max-width: 280px;
+}
+
+.selected-count {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.table-wrap {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.projects-table {
+  width: 100%;
+}
+
+.path-cell {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-state {
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding: 24px 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+:host-context(.dark-theme) {
+  .subtitle,
+  .selected-count,
+  .empty-state {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .table-wrap {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}

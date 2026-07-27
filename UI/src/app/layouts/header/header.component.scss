@@ -1,0 +1,17 @@
+.app-header {
+  height: var(--app-header-height);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  -webkit-app-region: drag;  // Tauri: drag window from header
+
+  button, a {
+    -webkit-app-region: no-drag;
+  }
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 8px;
+}

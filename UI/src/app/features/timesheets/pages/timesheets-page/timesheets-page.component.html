@@ -1,0 +1,223 @@
+<div class="timesheets-page">
+  <app-page-header title="Timesheets" subtitle="Generate, review, and manage your daily work updates" icon="description">
+    <button mat-flat-button color="primary" [disabled]="ts.isGenerating()" (click)="generate()">
+      @if (ts.isGenerating()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        <mat-icon>auto_awesome</mat-icon>
+      }
+      {{ ts.isGenerating() ? 'Generating…' : 'Generate' }}
+    </button>
+
+    @if (ts.currentTimesheet()) {
+      <button mat-stroked-button [disabled]="ts.isGenerating()" (click)="regenerate()" matTooltip="Regenerate a new draft from latest activity">
+        <mat-icon>refresh</mat-icon>
+        Regenerate
+      </button>
+      <button mat-stroked-button color="accent" (click)="finalize()">
+        <mat-icon>check_circle</mat-icon>
+        Finalize
+      </button>
+    }
+  </app-page-header>
+
+  @if (ts.qualityScore()) {
+    <mat-card class="quality-card">
+      <mat-card-content>
+        <div class="quality-row">
+          <span class="quality-label">Draft Quality</span>
+          <span class="quality-pct">{{ qualityPercent() }}%</span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="qualityPercent()"
+          [color]="qualityPercent() >= 70 ? 'primary' : 'warn'"
+        />
+        <div class="quality-breakdown">
+          <span>Completeness {{ (ts.qualityScore()!.completeness * 100).toFixed(0) }}%</span>
+          <span>Confidence {{ (ts.qualityScore()!.confidence * 100).toFixed(0) }}%</span>
+          <span>Coverage {{ (ts.qualityScore()!.coverage * 100).toFixed(0) }}%</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <mat-tab-group animationDuration="200ms">
+    <!-- TAB 1: Draft Editor (P5-012) -->
+    <mat-tab label="Draft">
+      <div class="tab-content">
+        @if (editableDraft()?.taskGroups?.length) {
+          <div class="editor-actions">
+            <button mat-button (click)="addTaskGroup()">
+              <mat-icon>add</mat-icon>
+              Add Task Group
+            </button>
+            <span class="spacer"></span>
+            <button mat-flat-button color="primary" (click)="saveEdits()">
+              <mat-icon>save</mat-icon>
+              Save Draft
+            </button>
+          </div>
+
+          @for (group of editableDraft()!.taskGroups; track group.title; let gi = $index) {
+            <mat-card class="task-group-card">
+              <mat-card-header>
+                <input
+                  class="group-title-input"
+                  [(ngModel)]="group.title"
+                  placeholder="Task title"
+                />
+                @if (group.ticketReference) {
+                  <mat-chip class="ticket-chip">{{ group.ticketReference }}</mat-chip>
+                }
+                <span class="spacer"></span>
+                <button mat-icon-button (click)="removeTaskGroup(gi)" matTooltip="Remove task group">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </mat-card-header>
+
+              <mat-card-content>
+                <ul
+                  class="bullets-list"
+                  cdkDropList
+                  [cdkDropListData]="group.bullets"
+                  (cdkDropListDropped)="dropBullet(gi, $event)"
+                >
+                  @for (bullet of group.bullets; track $index; let bi = $index) {
+                    <li class="bullet-item" cdkDrag>
+                      <mat-icon class="drag-handle" cdkDragHandle>drag_indicator</mat-icon>
+                      <textarea
+                        class="bullet-input"
+                        rows="1"
+                        [(ngModel)]="group.bullets[bi]"
+                        [placeholder]="'Bullet ' + (bi + 1)"
+                        (blur)="onBulletBlur(gi, bi, bullet)"
+                      ></textarea>
+                      <button mat-icon-button (click)="removeBullet(gi, bi)" matTooltip="Remove bullet">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </li>
+                  }
+                </ul>
+                <button mat-button class="add-bullet-btn" (click)="addBullet(gi)">
+                  <mat-icon>add</mat-icon>
+                  Add bullet
+                </button>
+              </mat-card-content>
+            </mat-card>
+          }
+        } @else {
+          <app-empty-state
+            icon="description"
+            title="No draft yet"
+            subtitle="Click Generate to create your timesheet from today's AI sessions and git commits."
+          />
+        }
+      </div>
+    </mat-tab>
+
+    <!-- TAB 2: Preview (P5-013) -->
+    <mat-tab label="Preview">
+      <div class="tab-content">
+        @if (ts.currentTimesheet()) {
+          <div class="preview-toolbar">
+            <button mat-button [class.active]="previewFormat() === 'html'" (click)="switchPreview('html')">Rich Text</button>
+            <button mat-button [class.active]="previewFormat() === 'markdown'" (click)="switchPreview('markdown')">Markdown</button>
+            <button mat-button [class.active]="previewFormat() === 'plain'" (click)="switchPreview('plain')">Plain Text</button>
+          </div>
+
+          @if (previewFormat() === 'html' && ts.previewHtml()) {
+            <div class="preview-html" [innerHTML]="ts.previewHtml()"></div>
+          } @else if (previewContent()) {
+            <pre class="preview-text">{{ previewContent() }}</pre>
+          } @else {
+            <app-empty-state icon="preview" title="Select a format" subtitle="Choose a preview format above." />
+          }
+        } @else {
+          <app-empty-state icon="preview" title="Nothing to preview" subtitle="Generate a draft first." />
+        }
+      </div>
+    </mat-tab>
+
+    <!-- TAB 3: History (P5-014) -->
+    <mat-tab label="History">
+      <div class="tab-content">
+        @if (ts.history().length > 0) {
+          <mat-list class="history-list">
+            @for (item of ts.history(); track item.id) {
+              <mat-list-item class="history-item">
+                <span matListItemTitle>{{ item.generatedDate }}</span>
+                <span matListItemLine>{{ item.status | uppercase }} — generated {{ item.createdAt | date: 'short' }}</span>
+                <span matListItemMeta>
+                  <mat-chip [color]="item.status === 'final' ? 'primary' : 'default'" highlighted>
+                    {{ item.status }}
+                  </mat-chip>
+                </span>
+              </mat-list-item>
+              <mat-divider />
+            }
+          </mat-list>
+        } @else {
+          <app-empty-state icon="history" title="No history yet" subtitle="Generated timesheets will appear here." />
+        }
+      </div>
+    </mat-tab>
+
+    <!-- TAB 4: Style Profile (P5-007/008) -->
+    <mat-tab label="Style">
+      <div class="tab-content">
+        @if (ts.styleProfile()) {
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Writing Style Profile</mat-card-title>
+              <mat-card-subtitle>Learned from your historical timesheets and edits</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="style-content">
+              <div class="style-row">
+                <span class="style-label">Preferred Verbs</span>
+                <mat-chip-set>
+                  @for (verb of ts.styleProfile()!.preferredVerbs.slice(0, 5); track verb) {
+                    <mat-chip>{{ verb }}</mat-chip>
+                  }
+                </mat-chip-set>
+              </div>
+              <div class="style-row">
+                <span class="style-label">Bullet Style</span>
+                <span>{{ ts.styleProfile()!.bulletChar }}</span>
+              </div>
+              <div class="style-row">
+                <span class="style-label">Grouping</span>
+                <span>{{ ts.styleProfile()!.groupBy }}</span>
+              </div>
+              <div class="style-row">
+                <span class="style-label">Verbosity</span>
+                <span>{{ ts.styleProfile()!.verbosity }}</span>
+              </div>
+              <div class="style-row">
+                <span class="style-label">Source Files</span>
+                <span>{{ ts.styleProfile()!.sourceFiles.join(', ') || 'None uploaded' }}</span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-flat-button color="primary" (click)="uploadStyleFiles()">
+                <mat-icon>upload_file</mat-icon>
+                Upload Examples (.txt/.md/.docx)
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        } @else {
+          <app-empty-state
+            icon="style"
+            title="No style profile yet"
+            subtitle="Upload .txt, .md, or .docx timesheet examples to learn your writing style."
+          >
+            <button mat-flat-button color="primary" (click)="uploadStyleFiles()">
+              <mat-icon>upload_file</mat-icon>
+              Upload Examples
+            </button>
+          </app-empty-state>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,42 @@
+.profile-step {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h2 {
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+
+.subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 24px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+:host-context(.dark-theme) {
+  .subtitle {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

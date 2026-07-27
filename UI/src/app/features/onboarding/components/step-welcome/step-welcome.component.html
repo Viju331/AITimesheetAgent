@@ -1,0 +1,27 @@
+<div class="welcome-step">
+  <div class="welcome-icon">
+    <mat-icon>schedule</mat-icon>
+  </div>
+
+  <h1>Welcome to AI Timesheet Agent</h1>
+  <p class="subtitle">
+    Let's set up your workspace in a few quick steps so we can start turning your AI-assisted
+    coding sessions into accurate, ready-to-submit timesheets.
+  </p>
+
+  <ul class="benefits">
+    @for (benefit of benefits; track benefit.text) {
+      <li>
+        <mat-icon>{{ benefit.icon }}</mat-icon>
+        <span>{{ benefit.text }}</span>
+      </li>
+    }
+  </ul>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" (click)="next.emit()">
+      Get Started
+      <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+    </button>
+  </div>
+</div>

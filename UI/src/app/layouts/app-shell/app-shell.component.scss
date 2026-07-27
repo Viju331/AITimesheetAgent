@@ -1,0 +1,23 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--app-content-padding);
+  background-color: var(--color-surface);
+
+  .dark-theme & {
+    background-color: var(--color-surface-dark);
+  }
+}

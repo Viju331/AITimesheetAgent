@@ -1,0 +1,88 @@
+// Angular Material theme setup
+@use '@angular/material' as mat;
+
+// Include Material core styles (once globally)
+@include mat.core();
+
+// ── Custom Palettes ───────────────────────────────────────────────────────────
+$primary-palette: mat.m2-define-palette(mat.$m2-indigo-palette, 600, 300, 900);
+$accent-palette:  mat.m2-define-palette(mat.$m2-amber-palette,  700, 400, 900);
+$warn-palette:    mat.m2-define-palette(mat.$m2-red-palette);
+
+// ── Light Theme ───────────────────────────────────────────────────────────────
+$light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent:  $accent-palette,
+    warn:    $warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: "'Inter', 'Segoe UI', sans-serif",
+  ),
+  density: 0,
+));
+
+// ── Dark Theme ────────────────────────────────────────────────────────────────
+$dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $primary-palette,
+    accent:  $accent-palette,
+    warn:    $warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: "'Inter', 'Segoe UI', sans-serif",
+  ),
+  density: 0,
+));
+
+// Apply light theme globally
+@include mat.all-component-themes($light-theme);
+
+// Apply dark theme when .dark-theme class is on body
+.dark-theme {
+  @include mat.all-component-colors($dark-theme);
+}
+
+// ── Tailwind base ─────────────────────────────────────────────────────────────
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// ── Global resets & CSS tokens ────────────────────────────────────────────────
+:root {
+  --app-sidebar-width:   240px;
+  --app-header-height:   64px;
+  --app-footer-height:   40px;
+  --app-content-padding: 24px;
+  --app-border-radius:   8px;
+
+  --color-surface:       #f8f9fa;
+  --color-surface-dark:  #1e1e2e;
+  --color-border:        #e0e0e0;
+  --color-border-dark:   #2d2d3f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  background-color: var(--color-surface);
+  color: #212121;
+}
+
+body.dark-theme {
+  background-color: var(--color-surface-dark);
+  color: #e0e0e0;
+}
+
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: #bdbdbd; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9e9e9e; }
+
+// Prevent Tauri window text drag
+* { -webkit-user-select: none; user-select: none; }
+input, textarea, [contenteditable] { user-select: text; }

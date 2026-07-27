@@ -1,0 +1,137 @@
+<div class="activities-page">
+  <app-page-header title="Activities" subtitle="Git intelligence and unified work activity" icon="timeline">
+    <mat-form-field appearance="outline" class="interval-field">
+      <mat-label>Auto-refresh</mat-label>
+      <mat-select
+        [ngModel]="refreshIntervalMinutes()"
+        (ngModelChange)="onIntervalChange($event)"
+      >
+        @for (option of intervalOptions; track option.minutes) {
+          <mat-option [value]="option.minutes">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" [disabled]="isScanning()" (click)="refresh()">
+      @if (isScanning()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        <mat-icon>refresh</mat-icon>
+      }
+      Refresh
+    </button>
+  </app-page-header>
+
+  <div class="stat-cards">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().repositoryCount }}</span>
+        <span class="stat-label">Repositories</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().commitCount }}</span>
+        <span class="stat-label">Commits</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().modifiedFileCount }}</span>
+        <span class="stat-label">Modified Files</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().activityCount }}</span>
+        <span class="stat-label">Git-linked Activities</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="panels">
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Repositories &amp; Branches</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (dashboard().repositories.length > 0) {
+          <ul class="repo-list">
+            @for (repo of dashboard().repositories; track repo.id) {
+              <li class="repo-item">
+                <div class="repo-path">{{ repo.rootPath }}</div>
+                <div class="repo-meta">
+                  @if (repo.currentBranch) {
+                    <span class="branch-chip">{{ repo.currentBranch }}</span>
+                  }
+                  @if (repo.lastScannedAt) {
+                    <span class="scanned-at">Scanned {{ repo.lastScannedAt | date: 'short' }}</span>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <app-empty-state icon="source" title="No repositories yet" subtitle="Click Refresh to scan your selected projects." />
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Recent Commits</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (dashboard().recentCommits.length > 0) {
+          <ul class="commit-list">
+            @for (commit of dashboard().recentCommits; track commit.id) {
+              <li class="commit-item">
+                <span class="commit-hash">{{ commit.commitHash.slice(0, 7) }}</span>
+                <div class="commit-body">
+                  <span class="commit-message">{{ commit.commitMessage }}</span>
+                  <span class="commit-meta">
+                    {{ commit.changeType }} &middot; +{{ commit.insertions }}/-{{ commit.deletions }}
+                    &middot; {{ commit.filesChanged }} file(s)
+                  </span>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <app-empty-state icon="commit" title="No commits today" subtitle="Commits you author today will show up here." />
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="panel panel-wide">
+      <mat-card-header>
+        <mat-card-title>Unified Activities</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (activities().length > 0) {
+          <ul class="activity-list">
+            @for (activity of activities(); track activity.id) {
+              <li class="activity-item">
+                <div class="activity-body">
+                  <span class="activity-title">{{ activity.title }}</span>
+                  <span class="activity-meta">{{ activity.activityType }}</span>
+                </div>
+                <div class="activity-badges">
+                  @if (activity.sourceSessionId) {
+                    <span class="badge badge-ai">AI</span>
+                  }
+                  @if (activity.sourceCommitId) {
+                    <span class="badge badge-git">Git</span>
+                  }
+                  <span class="badge badge-confidence">{{ confidencePercent(activity.confidenceScore) }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <app-empty-state icon="task_alt" title="No activities yet today" subtitle="Refresh sessions and git activity to populate this list." />
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

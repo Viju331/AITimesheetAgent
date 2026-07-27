@@ -1,0 +1,18 @@
+{
+  "name": "ai-timesheet-agent-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev":           "cd UI && npm run tauri:dev",
+    "build":         "cd UI && npm run tauri:build",
+    "ui:start":      "cd UI && npm start",
+    "ui:build":      "cd UI && npm run build:prod",
+    "ui:test":       "cd UI && npm test",
+    "ui:lint":       "cd UI && npm run lint",
+    "ui:format":     "cd UI && npm run format",
+    "api:check":     "cd API && cargo check",
+    "api:test":      "cd API && cargo test",
+    "api:clippy":    "cd API && cargo clippy -- -D warnings",
+    "ci":            "npm run ui:lint && npm run ui:test && npm run api:check"
+  }
+}

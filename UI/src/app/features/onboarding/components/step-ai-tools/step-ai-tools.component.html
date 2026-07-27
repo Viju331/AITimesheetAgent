@@ -1,0 +1,48 @@
+<div class="ai-tools-step">
+  <h2>Which AI coding tools do you use?</h2>
+  <p class="subtitle">
+    Select the tools you use so we know where to look for your session history. You can point us
+    to a custom session folder if yours isn't in the default location.
+  </p>
+
+  @if (loading()) {
+    <p class="loading">Loading tools...</p>
+  } @else {
+    <ul class="tool-list">
+      @for (tool of tools(); track tool.id) {
+        <li class="tool-row">
+          <mat-checkbox [checked]="tool.isEnabled" (change)="toggleTool(tool)">
+            {{ tool.displayName }}
+          </mat-checkbox>
+
+          @if (tool.isEnabled) {
+            <div class="folder-row">
+              <mat-form-field appearance="outline" class="folder-field">
+                <mat-label>Session folder (optional)</mat-label>
+                <input
+                  matInput
+                  [value]="tool.sessionFolder ?? ''"
+                  placeholder="Default location will be used if empty"
+                  (blur)="onFolderInput(tool, $any($event.target).value)"
+                />
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="pickFolder(tool)" aria-label="Browse folder">
+                <mat-icon>folder_open</mat-icon>
+              </button>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  <div class="actions">
+    <button mat-stroked-button (click)="back.emit()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+    <span class="spacer"></span>
+    <button mat-button (click)="next.emit()">Skip</button>
+    <button mat-flat-button color="primary" (click)="next.emit()">Next</button>
+  </div>
+</div>

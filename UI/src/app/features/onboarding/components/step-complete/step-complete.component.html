@@ -1,0 +1,46 @@
+<div class="complete-step">
+  <div class="complete-icon">
+    <mat-icon>check_circle</mat-icon>
+  </div>
+
+  <h1>You're all set!</h1>
+  <p class="subtitle">Here's a quick summary of your setup.</p>
+
+  <ul class="summary">
+    <li>
+      <mat-icon>person</mat-icon>
+      <span>{{ user() ? user()!.name : 'No profile name set' }}</span>
+    </li>
+    <li>
+      <mat-icon>smart_toy</mat-icon>
+      <span>
+        @if (enabledTools().length > 0) {
+          {{ enabledTools().length }} AI tool(s) enabled: {{ enabledToolNames() }}
+        } @else {
+          No AI tools enabled yet — you can add these later in Settings
+        }
+      </span>
+    </li>
+    <li>
+      <mat-icon>folder</mat-icon>
+      <span>
+        @if (selectedProjects().length > 0) {
+          {{ selectedProjects().length }} project(s) selected for tracking
+        } @else {
+          No projects selected yet — you can add these later in Projects
+        }
+      </span>
+    </li>
+  </ul>
+
+  <div class="actions">
+    <button mat-stroked-button (click)="back.emit()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+    <span class="spacer"></span>
+    <button mat-flat-button color="primary" [disabled]="finishing()" (click)="finish()">
+      @if (finishing()) { Finishing... } @else { Go to Dashboard }
+    </button>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+.ai-tools-step {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h2 {
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+
+.subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.loading {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.tool-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.tool-row {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.folder-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0 0 32px;
+}
+
+.folder-field {
+  flex: 1 1 auto;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+:host-context(.dark-theme) {
+  .subtitle,
+  .loading {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .tool-row {
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+}

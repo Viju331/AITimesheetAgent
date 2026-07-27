@@ -1,0 +1,100 @@
+<div class="settings-page p-6 max-w-3xl">
+  <h1 class="text-2xl font-medium mb-6">Settings</h1>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+
+    <!-- General -->
+    <mat-card class="mb-6">
+      <mat-card-header><mat-card-title>General</mat-card-title></mat-card-header>
+      <mat-card-content class="pt-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Theme</mat-label>
+          <mat-select formControlName="theme">
+            <mat-option value="system">System Default</mat-option>
+            <mat-option value="light">Light</mat-option>
+            <mat-option value="dark">Dark</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- AI Tools -->
+    <mat-card class="mb-6">
+      <mat-card-header><mat-card-title>AI Tool Session Folders</mat-card-title></mat-card-header>
+      <mat-card-content class="pt-4 flex flex-col gap-3">
+
+        <div class="flex gap-2 items-center">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Claude Code folder</mat-label>
+            <input matInput formControlName="claudePath" placeholder="~/.claude/projects" />
+          </mat-form-field>
+          <button mat-icon-button type="button" (click)="pickFolder('claudePath')" matTooltip="Browse">
+            <mat-icon>folder_open</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Cursor folder</mat-label>
+            <input matInput formControlName="cursorPath" placeholder="%APPDATA%/Cursor/User" />
+          </mat-form-field>
+          <button mat-icon-button type="button" (click)="pickFolder('cursorPath')" matTooltip="Browse">
+            <mat-icon>folder_open</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Codex CLI folder</mat-label>
+            <input matInput formControlName="codexPath" placeholder="~/.codex" />
+          </mat-form-field>
+          <button mat-icon-button type="button" (click)="pickFolder('codexPath')" matTooltip="Browse">
+            <mat-icon>folder_open</mat-icon>
+          </button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Projects -->
+    <mat-card class="mb-6">
+      <mat-card-header><mat-card-title>Project Root Folder</mat-card-title></mat-card-header>
+      <mat-card-content class="pt-4">
+        <div class="flex gap-2 items-center">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-label>Root folder</mat-label>
+            <input matInput formControlName="projectRoot" placeholder="C:/Users/you/code" />
+          </mat-form-field>
+          <button mat-icon-button type="button" (click)="pickFolder('projectRoot')" matTooltip="Browse">
+            <mat-icon>folder_open</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- AI Providers -->
+    <mat-card class="mb-6">
+      <mat-card-header><mat-card-title>AI Provider Keys</mat-card-title></mat-card-header>
+      <mat-card-content class="pt-4 flex flex-col gap-3">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>OpenAI API Key</mat-label>
+          <input matInput formControlName="openAiKey" type="password" placeholder="sk-..." />
+          <mat-hint>Stored encrypted. Leave blank to keep existing key.</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Azure OpenAI API Key</mat-label>
+          <input matInput formControlName="azureOpenAiKey" type="password" placeholder="Azure key..." />
+          <mat-hint>Stored encrypted. Leave blank to keep existing key.</mat-hint>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button mat-raised-button color="primary" type="submit" [disabled]="saving()">
+        @if (saving()) { Saving... } @else { Save Settings }
+      </button>
+    </div>
+
+  </form>
+</div>

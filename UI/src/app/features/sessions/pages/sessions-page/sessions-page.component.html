@@ -1,0 +1,64 @@
+<div class="sessions-page">
+  <app-page-header title="AI Sessions" subtitle="Today's parsed AI session activity" icon="smart_toy">
+    <button mat-flat-button color="primary" [disabled]="isScanning()" (click)="refresh()">
+      @if (isScanning()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        <mat-icon>refresh</mat-icon>
+      }
+      Refresh
+    </button>
+  </app-page-header>
+
+  <div class="stat-cards">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().sessionCount }}</span>
+        <span class="stat-label">Sessions</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().messageCount }}</span>
+        <span class="stat-label">Messages</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-value">{{ dashboard().activityCount }}</span>
+        <span class="stat-label">Activities</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="timeline-card">
+    <mat-card-header>
+      <mat-card-title>Timeline</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isScanning() && dashboard().timeline.length === 0) {
+        <app-loading-spinner message="Scanning sessions..." />
+      } @else if (dashboard().timeline.length > 0) {
+        <ul class="timeline-list">
+          @for (event of dashboard().timeline; track event.id) {
+            <li class="timeline-item">
+              <span class="timeline-time">{{ event.eventTime }}</span>
+              <div class="timeline-body">
+                <span class="timeline-title">{{ event.title }}</span>
+                @if (event.description) {
+                  <span class="timeline-description">{{ event.description }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <app-empty-state
+          icon="schedule"
+          title="No activity yet today"
+          subtitle="Click Refresh to scan your enabled AI tools for today's sessions."
+        />
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

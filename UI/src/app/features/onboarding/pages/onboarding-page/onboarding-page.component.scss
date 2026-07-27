@@ -1,0 +1,36 @@
+.onboarding-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--mat-sys-surface, #fffbfe);
+}
+
+.onboarding-progress {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: inherit;
+  padding: 20px 24px 12px;
+
+  .step-label {
+    display: block;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 8px;
+  }
+}
+
+.onboarding-content {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+:host-context(.dark-theme) {
+  .onboarding-progress .step-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

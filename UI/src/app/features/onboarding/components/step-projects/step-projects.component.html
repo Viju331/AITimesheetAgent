@@ -1,0 +1,92 @@
+<div class="projects-step">
+  <h2>Find your projects</h2>
+  <p class="subtitle">
+    Pick the root folder where your code lives. We'll scan it for Git, Angular, .NET, and Node
+    projects and you can choose which ones to track.
+  </p>
+
+  <div class="root-row">
+    <mat-form-field appearance="outline" class="root-field">
+      <mat-label>Project root folder</mat-label>
+      <input matInput [value]="rootFolder() ?? ''" readonly placeholder="No folder selected" />
+    </mat-form-field>
+    <button mat-stroked-button type="button" (click)="pickRootFolder()">
+      <mat-icon>folder_open</mat-icon>
+      Browse
+    </button>
+    <button mat-stroked-button type="button" [disabled]="!rootFolder() || isScanning()" (click)="scan()">
+      @if (isScanning()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        <mat-icon>refresh</mat-icon>
+      }
+      Rescan
+    </button>
+  </div>
+
+  @if (projects().length > 0) {
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search projects</mat-label>
+        <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <button mat-button (click)="toggleAll()">
+        {{ allSelected() ? 'Deselect all' : 'Select all' }}
+      </button>
+
+      <span class="selected-count">{{ selectedCount() }} of {{ projects().length }} selected</span>
+    </div>
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="filteredProjects()" class="projects-table">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let project">
+            <mat-checkbox [checked]="project.isSelected" (change)="toggleProject(project)" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let project">{{ project.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="techStack">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let project">{{ project.techStack ?? 'Unknown' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="path">
+          <th mat-header-cell *matHeaderCellDef>Path</th>
+          <td mat-cell *matCellDef="let project" class="path-cell" [title]="project.path">
+            {{ project.path }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastScanned">
+          <th mat-header-cell *matHeaderCellDef>Last Scanned</th>
+          <td mat-cell *matCellDef="let project">
+            {{ project.lastScanned ? (project.lastScanned | date: 'short') : '—' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      </table>
+    </div>
+  } @else if (!isScanning()) {
+    <p class="empty-state">No projects found yet. Pick a root folder and rescan.</p>
+  }
+
+  <div class="actions">
+    <button mat-stroked-button (click)="back.emit()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+    <span class="spacer"></span>
+    <button mat-button (click)="next.emit()">Skip</button>
+    <button mat-flat-button color="primary" (click)="next.emit()">Next</button>
+  </div>
+</div>

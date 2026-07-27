@@ -1,0 +1,18 @@
+<nav class="sidebar" [class.collapsed]="collapsed()">
+  <mat-nav-list>
+    @for (item of navItems; track item.route) {
+      <a
+        mat-list-item
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [matTooltip]="collapsed() ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        @if (!collapsed()) {
+          <span matListItemTitle>{{ item.label }}</span>
+        }
+      </a>
+    }
+  </mat-nav-list>
+</nav>
